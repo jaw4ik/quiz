@@ -11,14 +11,6 @@
                 }
                 return '';
             }),
-
-            isRootLinkActive = function () {
-                var activeInstruction = router.activeInstruction();
-                if (_.isObject(activeInstruction)) {
-                    return !activeInstruction.config.rootLinkDisabled;
-                }
-                return true;
-            },
             
             logoUrl = ko.observable(''),
 
@@ -46,7 +38,6 @@
         return {
             router: router,
             cssName: cssName,
-            isRootLinkActive: isRootLinkActive,
             logoUrl: logoUrl,
             activate: activate
         };

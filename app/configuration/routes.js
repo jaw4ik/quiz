@@ -1,18 +1,17 @@
 ﻿define([], function () {
+    "use strict";
 
     return [
         {
             route: ['questions'],
             moduleId: 'viewmodels/questions',
-            title: 'Questions',
-            rootLinkDisabled: true
+            title: 'Questions'
         },
         {
             route: ['', 'introduction'],
             moduleId: 'viewmodels/introduction',
             title: 'Introduction',
-            hideNav: true,
-            rootLinkDisabled: true
+            hideNav: true
         },
         {
             route: 'summary',

@@ -9,6 +9,7 @@
         that.title = spec.title;
         that.hasContent = spec.hasContent;
         that.answers = spec.answers;
+        that.selectedAnswer = '';
         that.learningContents = spec.learningContents;
 
         that.isAnswered = false;
@@ -66,6 +67,11 @@
             that.isAnswered = false;
             that.isCorrectAnswered = false;
             that.score = 0;
+            that.selectedAnswer = '';
+        };
+
+        that.saveSelectedAnswer = function (selectedAnswerIds) {
+            that.selectedAnswer = selectedAnswerIds;
         };
 
     };

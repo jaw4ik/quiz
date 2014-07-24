@@ -10,7 +10,8 @@
                         blankInputSelector = '.blankInput',
 
                         $blanksHolder = $(element),
-                        blankValues = valueAccessor(),
+                        blankValues = valueAccessor().values,
+                        onValuesUpdatedHandler = valueAccessor().onValuesUpdated,
 
                         $blankItems = $(blankInputSelector, $blanksHolder);
 
@@ -26,6 +27,10 @@
 
                         $element.on('blur', function () {
                             blankValue.value = $element.val().trim();
+
+                            if (_.isFunction(onValuesUpdatedHandler)) {
+                                onValuesUpdatedHandler();
+                            }
                         });
                     });
                 }

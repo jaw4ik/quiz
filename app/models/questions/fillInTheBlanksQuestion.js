@@ -1,7 +1,7 @@
 ﻿define(['eventManager', 'repositories/objectiveRepository'], function (eventManager, objectiveRepository) {
     "use strict";
 
-    var ctor = function(spec) {
+    var ctor = function (spec) {
         var that = this;
 
         that.id = spec.id;
@@ -9,6 +9,7 @@
         that.title = spec.title;
         that.hasContent = spec.hasContent;
         that.answers = spec.answers;
+        that.selectedAnswers = [];
         that.learningContents = spec.learningContents;
 
         that.isAnswered = false;
@@ -28,7 +29,7 @@
 
             var objective = objectiveRepository.get(that.objectiveId);
 
-            var eventData =  {
+            var eventData = {
                 type: "fill-in",
                 question: {
                     id: that.id,
@@ -53,6 +54,11 @@
             that.isAnswered = false;
             that.isCorrectAnswered = false;
             that.score = 0;
+            that.selectedAnswers = [];
+        };
+
+        that.saveSelectedAnswers = function (selectedAnswers) {
+            that.selectedAnswers = selectedAnswers;
         };
 
     };

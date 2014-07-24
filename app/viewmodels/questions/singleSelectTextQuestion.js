@@ -20,10 +20,7 @@
                         return {
                             id: answer.id,
                             text: answer.text,
-                            isChecked: ko.observable(false),
-                            toggleCheck: function () {
-                                this.isChecked(!this.isChecked());
-                            }
+                            isChecked: ko.observable(question.selectedAnswer === answer.id)
                         };
                     });
 
@@ -38,7 +35,8 @@
                     answer.isChecked(false);
                 });
                 item.isChecked(true);
-            }
+                that.saveSelectedAnswer();
+            };
 
             that.loadQuestionContent = function () {
                 var contentUrl = 'content/' + that.objectiveId + '/' + that.id + '/content.html';
@@ -55,15 +53,24 @@
             };
 
             that.submit = function () {
-                var selectedAnswer = _.find(that.answers, function(answer) {
-                    return answer.isChecked();
-                });
-
-                var asnwerId = !_.isNullOrUndefined(selectedAnswer) && !_.isNullOrUndefined(selectedAnswer.id) ? selectedAnswer.id : '';
-
+                var asnwerId = getSelectedAnswer();
                 var question = questionRepository.get(that.objectiveId, that.id);
                 question.answer(asnwerId);
             };
+
+            that.saveSelectedAnswer = function () {
+                var asnwerId = getSelectedAnswer();
+                var question = questionRepository.get(that.objectiveId, that.id);
+                question.saveSelectedAnswer(asnwerId);
+            };
+
+            function getSelectedAnswer() {
+                var selectedAnswer = _.find(that.answers, function (answer) {
+                    return answer.isChecked();
+                });
+
+                return !_.isNullOrUndefined(selectedAnswer) && !_.isNullOrUndefined(selectedAnswer.id) ? selectedAnswer.id : '';
+            }
 
         };
 

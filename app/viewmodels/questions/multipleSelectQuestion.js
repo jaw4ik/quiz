@@ -3,25 +3,27 @@
         "use strict";
 
         var ctor = function (question, index, questionsCount) {
-            this.id = question.id;
-            this.objectiveId = question.objectiveId;
-            this.index = index;
-            this.questionsCount = questionsCount;
-            this.title = question.title;
-            this.hasContent = question.hasContent;
-            this.content = '';
-            this.answers = [];
+            var that = this;
 
-            this.activate = function () {
-                var that = this;
+            that.id = question.id;
+            that.objectiveId = question.objectiveId;
+            that.index = index;
+            that.questionsCount = questionsCount;
+            that.title = question.title;
+            that.hasContent = question.hasContent;
+            that.content = '';
+            that.answers = [];
+
+            that.activate = function () {
                 return Q.fcall(function () {
                     that.answers = _.map(question.answers, function (answer) {
                         return {
                             id: answer.id,
                             text: answer.text,
-                            isChecked: ko.observable(false),
+                            isChecked: ko.observable(_.contains(question.selectedAnswers, answer.id)),
                             toggleCheck: function () {
                                 this.isChecked(!this.isChecked());
+                                that.saveSelectedAnswers();
                             }
                         };
                     });
@@ -32,10 +34,8 @@
                 });
             };
 
-            this.loadQuestionContent = function () {
-                var that = this;
-
-                var contentUrl = 'content/' + this.objectiveId + '/' + this.id + '/content.html';
+            that.loadQuestionContent = function () {
+                var contentUrl = 'content/' + that.objectiveId + '/' + that.id + '/content.html';
                 return Q(http.get(contentUrl)).then(function (response) {
                     that.content = response;
                 }).fail(function () {
@@ -43,24 +43,33 @@
                 });
             };
 
-            this.showLearningContents = function () {
+            that.showLearningContents = function () {
                 eventManager.navigatedToLearningContent(this.id);
-                router.navigate('objective/' + this.objectiveId + '/question/' + this.id + '/learningContents');
+                router.navigate('objective/' + that.objectiveId + '/question/' + that.id + '/learningContents');
             };
 
-            this.submit = function () {
-                var selectedAnswers = _.chain(this.answers).map(function (answer) {
+            that.submit = function () {
+                var selectedAnswers = getSelectedAnswers();
+                var question = questionRepository.get(that.objectiveId, that.id);
+                question.answer(selectedAnswers);
+            };
+
+            that.saveSelectedAnswers = function() {
+                var selectedAnswers = getSelectedAnswers();
+                var question = questionRepository.get(that.objectiveId, that.id);
+
+                question.saveSelectedAnswers(selectedAnswers);
+            };
+
+            function getSelectedAnswers() {
+                return _.chain(that.answers).map(function (answer) {
                     if (answer.isChecked()) {
                         return answer.id;
                     }
                 }).filter(function (answer) {
                     return !_.isNullOrUndefined(answer);
                 }).value();
-
-                var question = questionRepository.get(this.objectiveId, this.id);
-                question.answer(selectedAnswers);
-            };
-
+            }
         };
 
         return ctor;

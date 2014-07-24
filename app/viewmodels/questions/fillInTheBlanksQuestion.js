@@ -16,9 +16,11 @@
         that.activate = function () {
             return Q.fcall(function () {
                 that.answers = _.map(question.answers, function (answer) {
+                    var savedAnswer = _.find(question.selectedAnswers, function (selectedAnswer) { return selectedAnswer.id === answer.id; });
                     return {
+                        id: answer.id,
                         groupId: answer.group,
-                        value: ''
+                        value: _.isNullOrUndefined(savedAnswer) ? '' : savedAnswer.value
                     };
                 });
 
@@ -45,6 +47,19 @@
         that.submit = function () {
             var question = questionRepository.get(that.objectiveId, that.id);
             question.answer(that.answers);
+        };
+
+        that.saveSelectedAnswers = function () {
+            var selectedAnswers = _.chain(that.answers)
+                .filter(function (answer) {
+                    return !_.isEmptyOrWhitespace(answer.value);
+                })
+                .map(function (answer) {
+                    return { id: answer.id, value: answer.value };
+                }).value();
+
+            var question = questionRepository.get(that.objectiveId, that.id);
+            question.saveSelectedAnswers(selectedAnswers);
         };
 
     };

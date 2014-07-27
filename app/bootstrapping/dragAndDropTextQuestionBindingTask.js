@@ -122,7 +122,19 @@
                     var text = ko.utils.unwrapObservable(value.text);
 
                     if (text) {
-                        // I believe it will be used when we have to restore previously saved answer
+                        $(element).droppable('option', 'accept', '.drag-and-drop-text-draggable');
+
+                        var draggableTexts = $('.drag-and-drop-text-draggable-container').children('.drag-and-drop-text-draggable');
+                        var placedDraggableText = _.find(draggableTexts, function (draggableText) {
+                            return ko.dataFor(draggableText).id === text.id;
+                        });
+
+                        if (_.isNullOrUndefined(placedDraggableText)) {
+                            return;
+                        }
+
+                        $(placedDraggableText).text(text.text);
+                        $(placedDraggableText).appendTo(element);
                     } else {
                         $(element).droppable('option', 'accept', '.drag-and-drop-text-draggable');
                         $(element).children('.drag-and-drop-text-draggable').css('left', '').css('top', '').appendTo($('.drag-and-drop-text-draggable-container'));

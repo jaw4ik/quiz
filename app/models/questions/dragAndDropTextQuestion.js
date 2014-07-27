@@ -10,6 +10,7 @@
 
         that.background = spec.background;
         that.dropspots = spec.dropspots;
+        that.placedAnswers = [];
         that.learningContents = spec.learningContents;
         that.score = spec.score;
         that.isAnswered = false;
@@ -60,6 +61,11 @@
             that.isAnswered = false;
             that.isCorrectAnswered = false;
             that.score = 0;
+            that.placedAnswers = [];
+        };
+
+        that.savePlacedAnswers = function(placedAnswers) {
+            that.placedAnswers = placedAnswers;
         };
     };
 

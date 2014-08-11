@@ -62,11 +62,20 @@
                 init: function (element, valueAccessor, allBindingsAccessor) {
                     var allBindings = allBindingsAccessor();
                     var scope = ko.utils.unwrapObservable(allBindings.scope) || 'question';
+                    var $element = $(element);
 
-                    $(element).draggable({
+                    $element.draggable({
                         scope: scope,
                         revert: 'invalid',
-                        scroll: false
+                        helper: 'clone',
+                        scroll: false,
+                        appendTo: 'body',
+                        start: function(){
+                            $element.css({visibility:'hidden'});
+                        },
+                        stop: function(){
+                            $element.css({visibility:'visible'});
+                        }
                     });
                 }
             }

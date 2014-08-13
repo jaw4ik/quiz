@@ -8,18 +8,21 @@
         that.objectiveId = spec.objectiveId;
         that.title = spec.title;
         that.hasContent = spec.hasContent;
-        that.answers = spec.answers;
-        that.selectedAnswers = [];
+        that.answerGroups = spec.answerGroups;
+        that.selectedAnswerGroups = [];
         that.learningContents = spec.learningContents;
 
         that.isAnswered = false;
         that.isCorrectAnswered = false;
         that.score = 0;
 
-        that.answer = function (submittedAnswers) {
-            var hasIncorrectAnswer = _.some(submittedAnswers, function (submittedAnswer) {
-                return _.some(that.answers, function (answer) {
-                    return submittedAnswer.groupId === answer.group && submittedAnswer.value !== answer.text;
+        that.answer = function (submittedAnswerGroups) {
+            var hasIncorrectAnswer = _.some(submittedAnswerGroups, function (submitedAnswerGroup) {
+                return _.some(that.answerGroups, function (answerGroup) {
+                    if (_.isFunction(answerGroup.checkIsCorrect) && submitedAnswerGroup.id == answerGroup.id) {
+                        return !answerGroup.checkIsCorrect(submitedAnswerGroup);
+                    }
+                    return false;
                 });
             });
 
@@ -35,12 +38,12 @@
                     id: that.id,
                     title: that.title,
                     score: that.score,
-                    enteredAnswersTexts: _.map(submittedAnswers, function (item) {
+                    enteredAnswersTexts: _.map(submittedAnswerGroups, function (item) {
                         return item.value;
                     }),
-                    correctAnswersTexts: _.map(that.answers, function (item) {
-                        return item.text;
-                    })
+                    correctAnswersTexts: _.flatten(_.map(that.answerGroups, function (item) {
+                        return item.getCorrectText();
+                    }))
                 },
                 objective: {
                     id: objective.id,
@@ -54,11 +57,11 @@
             that.isAnswered = false;
             that.isCorrectAnswered = false;
             that.score = 0;
-            that.selectedAnswers = [];
+            that.selectedAnswerGroups = [];
         };
 
-        that.saveSelectedAnswers = function (selectedAnswers) {
-            that.selectedAnswers = selectedAnswers;
+        that.saveSelectedAnswerGroups = function (selectedAnswerGroups) {
+            that.selectedAnswerGroups = selectedAnswerGroups;
         };
 
     };

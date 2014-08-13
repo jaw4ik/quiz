@@ -11,16 +11,17 @@
         that.title = question.title;
         that.hasContent = question.hasContent;
         that.content = '';
-        that.answers = [];
+        that.answerGroups = [];
 
         that.activate = function () {
             return Q.fcall(function () {
-                that.answers = _.map(question.answers, function (answer) {
-                    var savedAnswer = _.find(question.selectedAnswers, function (selectedAnswer) { return selectedAnswer.id === answer.id; });
+                that.answerGroups = _.map(question.answerGroups, function (answerGroup) {
+                    var savedAnswerGroup = _.find(question.selectedAnswerGroups, function (selectedAnswerGroup) { return selectedAnswerGroup.id === answerGroup.id; });
                     return {
-                        id: answer.id,
-                        groupId: answer.group,
-                        value: _.isNullOrUndefined(savedAnswer) ? '' : savedAnswer.value
+                        id: answerGroup.id,
+                        answers: answerGroup.answers,
+                        value: _.isNullOrUndefined(savedAnswerGroup) ? '' : savedAnswerGroup.value,
+                        isAnswered: ko.observable(!_.isNullOrUndefined(savedAnswerGroup))
                     };
                 });
 
@@ -46,20 +47,16 @@
 
         that.submit = function () {
             var question = questionRepository.get(that.objectiveId, that.id);
-            question.answer(that.answers);
+            question.answer(that.answerGroups);
         };
 
-        that.saveSelectedAnswers = function () {
-            var selectedAnswers = _.chain(that.answers)
-                .filter(function (answer) {
-                    return !_.isEmptyOrWhitespace(answer.value);
-                })
-                .map(function (answer) {
-                    return { id: answer.id, value: answer.value };
-                }).value();
+        that.saveSelectedAnswerGroups = function () {
+            var selectedAnswers = _.map(that.answerGroups, function(answerGroup) {
+                return { id: answerGroup.id, value: answerGroup.value, isAnswered: answerGroup.isAnswered() };
+            });
 
             var question = questionRepository.get(that.objectiveId, that.id);
-            question.saveSelectedAnswers(selectedAnswers);
+            question.saveSelectedAnswerGroups(selectedAnswers);
         };
 
     };

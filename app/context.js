@@ -1,6 +1,5 @@
-﻿define(['models/course', 'models/objective', 'models/answer', 'models/learningContent', 'models/questions/multipleSelectQuestion',
-    'models/questions/singleSelectTextQuestion', 'models/questions/fillInTheBlanksQuestion', 'models/questions/dragAndDropTextQuestion', 'models/questions/singleSelectImageQuestion', 'models/singleSelectImageAnswer', 'constants'],
-    function (Course, Objective, Answer, LearningContent, MultipleSelectQuestion, SingleSelectTextQuestion, FillInTheBlanksQuestion, DragAndDropTextQuestion, SingleSelectImageQuestion, SingleSelectImageAnswer, constants) {
+﻿define(['models/course', 'models/objective', 'models/answer', 'models/learningContent', 'models/questions/multipleSelectQuestion','models/questions/singleSelectTextQuestion', 'models/questions/fillInTheBlanksQuestion', 'models/questions/dragAndDropTextQuestion','models/questions/singleSelectImageQuestion', 'models/singleSelectImageAnswer', 'models/answerGroup', 'constants'],
+    function (Course, Objective, Answer, LearningContent, MultipleSelectQuestion, SingleSelectTextQuestion, FillInTheBlanksQuestion, DragAndDropTextQuestion,SingleSelectImageQuestion, SingleSelectImageAnswer, AnswerGroup, constants) {
         "use strict";
 
         var context = {
@@ -83,7 +82,7 @@
                 id: question.id,
                 objectiveId: objectiveId,
                 title: question.title,
-                answers: mapAnswers(question.answers),
+                answerGroups: mapAnswerGroups(question.answerGroups),
                 learningContents: mapLearningContents(question.learningContents),
                 score: 0,
                 hasContent: question.hasContent
@@ -132,8 +131,16 @@
                 return new Answer({
                     id: answer.id,
                     isCorrect: answer.isCorrect,
-                    text: answer.text,
-                    group: answer.group
+                    text: answer.text
+                });
+            });
+        }
+
+        function mapAnswerGroups(answerGroups) {
+            return _.map(answerGroups, function(answerGroup) {
+                return new AnswerGroup({
+                    id: answerGroup.id,
+                    answers: mapAnswers(answerGroup.answers)
                 });
             });
         }

@@ -6,7 +6,6 @@
             this.text = spec.text;
             this.isCorrect = spec.isCorrect;
             this.isChecked = false;
-            this.group = spec.group;
         }
 
         return Answer;

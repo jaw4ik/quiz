@@ -1,5 +1,5 @@
-﻿define(['plugins/router', 'plugins/http', 'configuration/settings', 'repositories/questionRepository', 'eventManager', 'imagePreview'],
-    function (router, http, settings, questionRepository, eventManager, imagePreview) {
+﻿define(['plugins/router', 'plugins/http', 'configuration/settings', 'repositories/questionRepository', 'eventManager'],
+    function (router, http, settings, questionRepository, eventManager) {
         "use strict";
 
         var ctor = function (question, index, questionsCount) {
@@ -19,13 +19,15 @@
                     that.answers = _.map(question.answers, function (answer) {
                         return {
                             id: answer.id,
-                            image: answer.image,
-                            isChecked: ko.observable(question.selectedAnswer === answer.id),
-                            preview: function() {
-                                imagePreview.show(this.image);
-                            }
+                            image: answer.image
                         };
                     });
+
+                    if (question.selectedAnswer) {
+                        that.selectedOption(_.find(that.answers, function (answer) {
+                            return answer.id == question.selectedAnswer;
+                        }));
+                    }
 
                     if (that.hasContent) {
                         return that.loadQuestionContent();
@@ -33,11 +35,10 @@
                 });
             };
 
-            that.checkItem = function (item) {
-                _.each(that.answers, function (answer) {
-                    answer.isChecked(false);
-                });
-                item.isChecked(true);
+
+            that.selectedOption = ko.observable();
+            that.selectOption = function (item) {
+                that.selectedOption(item);
                 that.saveSelectedAnswer();
             };
 
@@ -56,25 +57,14 @@
             };
 
             that.submit = function () {
-                var asnwerId = getSelectedAnswer();
-                var question = questionRepository.get(that.objectiveId, that.id);
-                question.answer(asnwerId);
+                var option = ko.utils.unwrapObservable(that.selectedOption);
+                question.answer(option ? option.id : undefined);
             };
 
             that.saveSelectedAnswer = function () {
-                var asnwerId = getSelectedAnswer();
-                var question = questionRepository.get(that.objectiveId, that.id);
-                question.saveSelectedAnswer(asnwerId);
+                var option = ko.utils.unwrapObservable(that.selectedOption);
+                question.saveSelectedAnswer(option ? option.id : undefined);
             };
-
-            function getSelectedAnswer() {
-                var selectedAnswer = _.find(that.answers, function (answer) {
-                    return answer.isChecked();
-                });
-
-                return !_.isNullOrUndefined(selectedAnswer) && !_.isNullOrUndefined(selectedAnswer.id) ? selectedAnswer.id : '';
-            }
-
         };
 
         return ctor;

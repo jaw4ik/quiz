@@ -104,8 +104,8 @@
                     $selectedItem = $option;
                     blankValue.value = $option.text();
                     if (_.isFunction(onValuesUpdatedHandler)) {
-                        onValuesUpdatedHandler();
                         blankValue.isAnswered(true);
+                        onValuesUpdatedHandler();
                     }
                     changeCurrentSelectedItem();
                     scrollOption($option, keyCode);

@@ -16,7 +16,10 @@
         that.activate = function () {
             return Q.fcall(function () {
                 that.answerGroups = _.map(question.answerGroups, function (answerGroup) {
-                    var savedAnswerGroup = _.find(question.selectedAnswerGroups, function (selectedAnswerGroup) { return selectedAnswerGroup.id === answerGroup.id; });
+                    var savedAnswerGroup = _.find(question.selectedAnswerGroups, function (selectedAnswerGroup) {
+                        return selectedAnswerGroup.id === answerGroup.id && selectedAnswerGroup.isAnswered;
+                    });
+
                     return {
                         id: answerGroup.id,
                         answers: answerGroup.answers,
@@ -56,6 +59,7 @@
             });
 
             var question = questionRepository.get(that.objectiveId, that.id);
+
             question.saveSelectedAnswerGroups(selectedAnswers);
         };
 

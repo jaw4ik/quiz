@@ -1,5 +1,8 @@
-﻿define(['models/course', 'models/objective', 'models/answer', 'models/learningContent', 'models/questions/multipleSelectQuestion','models/questions/singleSelectTextQuestion', 'models/questions/fillInTheBlanksQuestion', 'models/questions/dragAndDropTextQuestion','models/questions/singleSelectImageQuestion', 'models/singleSelectImageAnswer', 'models/answerGroup', 'constants'],
-    function (Course, Objective, Answer, LearningContent, MultipleSelectQuestion, SingleSelectTextQuestion, FillInTheBlanksQuestion, DragAndDropTextQuestion,SingleSelectImageQuestion, SingleSelectImageAnswer, AnswerGroup, constants) {
+﻿define(['models/course', 'models/objective', 'models/answer', 'models/learningContent', 'models/questions/multipleSelectQuestion', 'models/questions/singleSelectTextQuestion',
+    'models/questions/fillInTheBlanksQuestion', 'models/questions/dragAndDropTextQuestion', 'models/questions/singleSelectImageQuestion', 'models/singleSelectImageAnswer',
+    'models/answerGroup', 'constants', 'models/questions/textMatchingQuestion'],
+    function (Course, Objective, Answer, LearningContent, MultipleSelectQuestion, SingleSelectTextQuestion, FillInTheBlanksQuestion, DragAndDropTextQuestion,
+        SingleSelectImageQuestion, SingleSelectImageAnswer, AnswerGroup, constants, TextMatchingQuestion) {
         "use strict";
 
         var context = {
@@ -58,6 +61,8 @@
                     return mapDragAndDropTextQuestion(question, objective.id);
                 } else if (question.type == constants.question.types.singleSelectImage) {
                     return mapSingleSelectImageQuestion(question, objective.id);
+                } else if (question.type == constants.question.types.textMatching) {
+                    return mapTextMatchingQuestion(question, objective.id);
                 }
             }).filter(function (question) {
                 return !_.isNullOrUndefined(question);
@@ -126,6 +131,18 @@
             });
         }
 
+        function mapTextMatchingQuestion(question, objectiveId) {
+            return new TextMatchingQuestion({
+                id: question.id,
+                objectiveId: objectiveId,
+                title: question.title,
+                answers: question.answers,
+                score: 0,
+                hasContent: question.hasContent,
+                correctAnswerId: question.correctAnswerId
+            });
+        }
+
         function mapAnswers(answers) {
             return _.map(answers, function (answer) {
                 return new Answer({
@@ -137,7 +154,7 @@
         }
 
         function mapAnswerGroups(answerGroups) {
-            return _.map(answerGroups, function(answerGroup) {
+            return _.map(answerGroups, function (answerGroup) {
                 return new AnswerGroup({
                     id: answerGroup.id,
                     answers: mapAnswers(answerGroup.answers)

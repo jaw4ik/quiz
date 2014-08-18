@@ -52,8 +52,8 @@
                 $blankItem.on('blur', function () {
                     blankValue.value = $blankItem.val().trim();
                     if (_.isFunction(onValuesUpdatedHandler)) {
-                        onValuesUpdatedHandler();
                         blankValue.isAnswered(true);
+                        onValuesUpdatedHandler();
                     }
                 });
             }

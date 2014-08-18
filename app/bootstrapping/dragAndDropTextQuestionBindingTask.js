@@ -149,19 +149,19 @@
                     var text = ko.utils.unwrapObservable(value.text);
 
                     if (text) {
-                        $(element).droppable('option', 'accept', '.drag-and-drop-text-draggable');
+                        _.defer(function () {
+                            var draggableTexts = $('.drag-and-drop-text-draggable-container').children('.drag-and-drop-text-draggable');
+                            var placedDraggableText = _.find(draggableTexts, function (draggableText) {
+                                return ko.dataFor(draggableText).id === text.id;
+                            });
 
-                        var draggableTexts = $('.drag-and-drop-text-draggable-container').children('.drag-and-drop-text-draggable');
-                        var placedDraggableText = _.find(draggableTexts, function (draggableText) {
-                            return ko.dataFor(draggableText).id === text.id;
+                            if (_.isNullOrUndefined(placedDraggableText)) {
+                                return;
+                            }
+
+                            $(placedDraggableText).appendTo(element);
+                            $(placedDraggableText).trigger('dragstop');
                         });
-
-                        if (_.isNullOrUndefined(placedDraggableText)) {
-                            return;
-                        }
-
-                        $(placedDraggableText).text(text.text);
-                        $(placedDraggableText).appendTo(element);
                     } else {
                         $(element).droppable('option', 'accept', '.drag-and-drop-text-draggable');
                         $(element).children('.drag-and-drop-text-draggable').css('left', '').css('top', '').appendTo($('.drag-and-drop-text-draggable-container'));

@@ -1,4 +1,4 @@
-﻿define(['knockout'], function (ko) {
+﻿define(['knockout', 'durandal/composition'], function (ko, composition) {
     "use strict";
 
     return {
@@ -105,6 +105,7 @@
                     }, 200);
             }
 
+            composition.addBindingHandler('thumbnail');
         }
     };
 });

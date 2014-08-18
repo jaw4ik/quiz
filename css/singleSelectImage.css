@@ -98,6 +98,8 @@
     border: 3px solid transparent;
     -ms-border-radius: 3px;
     border-radius: 3px;
+    width: 150px;
+    height: 150px;
 }
 
 .radio.image.checked .radio-image-wrapper {
@@ -108,8 +110,8 @@
     border: 1px solid #ddd;
     -ms-border-radius: 3px;
     border-radius: 3px;
-    width: 150px;
-    height: 150px;
+    width: 100%;
+    height: 100%;
 }
 
 .radio.image.checked .preview-thumbnail {

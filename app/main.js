@@ -24,6 +24,7 @@ define(['durandal/app', 'durandal/viewLocator', 'durandal/system', 'modulesIniti
         });
 
         app.start().then(function () {
+
             bootstrapper.run();
 
             if (!browserSupport.isSupportedMobile && !browserSupport.isSupportedBrowser) {

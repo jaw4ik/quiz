@@ -8,6 +8,8 @@
         that.title = spec.title;
         that.hasContent = spec.hasContent;
         that.answers = spec.answers;
+        that.selectedAnswers = [];
+        that.learningContents = spec.learningContents;
 
         that.isAnswered = false;
         that.isCorrectAnswered = false;
@@ -50,6 +52,11 @@
             that.isAnswered = false;
             that.isCorrectAnswered = false;
             that.score = 0;
+            that.selectedAnswers = [];
+        };
+
+        that.saveSelectedAnswers = function (selectedAnswers) {
+            that.selectedAnswers = selectedAnswers;
         };
     };
 

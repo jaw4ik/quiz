@@ -1,4 +1,4 @@
-﻿define(['plugins/http', 'views/questions/helpers/textMatchingQuestion'], function (http, viewHelper) {
+﻿define(['plugins/http', 'views/questions/helpers/textMatchingQuestion', 'eventManager', 'plugins/router'], function (http, viewHelper, eventManager, router) {
     "use strict";
 
     var ctor = function (question, index, questionsCount) {
@@ -24,12 +24,36 @@
 
         that.activate = function () {
             return Q.fcall(function () {
+
                 that.sources = _.map(question.answers, function (answer) {
-                    return new Source(answer.id, answer.key);
+                    var source = new Source(answer.id, answer.key);
+
+                    var savedAnswer = _.find(question.selectedAnswers, function (selectedAnswer) {
+                        return selectedAnswer.id == answer.id;
+                    });
+                    if (!_.isNullOrUndefined(savedAnswer)) {
+                        source.value(savedAnswer.value);
+                    }
+                    
+                    return source;
                 });
+
                 that.targets = _.map(values, function (value) {
-                    return new Target(value);
+                    var target = new Target(value);
+                    target.value.subscribe(function() {
+                        that.saveSelectedAnswers();
+                    });
+
+                    var savedAnswer = _.find(question.selectedAnswers, function (selectedAnswer) {
+                        return selectedAnswer.value == value;
+                    });
+                    if (!_.isNullOrUndefined(savedAnswer)) {
+                        target.rejectValue();
+                    }
+
+                    return target;
                 });
+                
             }).then(loadContent);
         };
 
@@ -40,10 +64,26 @@
         };
 
         that.isReady = ko.observable(false);
-        that.compositionComplete = function (view) {
+        that.compositionComplete = function(view) {
             viewHelper(view);
             that.isReady(true);
-        }
+        };
+
+        that.saveSelectedAnswers = function() {
+            var answers = _.map(that.sources, function (source) {
+                return {
+                    id: source.id,
+                    value: ko.utils.unwrapObservable(source.value)
+                };
+            });
+
+            question.saveSelectedAnswers(answers);
+        };
+
+        that.showLearningContents = function () {
+            eventManager.navigatedToLearningContent(that.id);
+            router.navigate('objective/' + that.objectiveId + '/question/' + that.id + '/learningContents');
+        };
 
         function loadContent() {
             if (that.hasContent) {

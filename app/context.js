@@ -137,6 +137,7 @@
                 objectiveId: objectiveId,
                 title: question.title,
                 answers: question.answers,
+                learningContents: mapLearningContents(question.learningContents),
                 score: 0,
                 hasContent: question.hasContent,
                 correctAnswerId: question.correctAnswerId

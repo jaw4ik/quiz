@@ -34,26 +34,27 @@
                     if (!_.isNullOrUndefined(savedAnswer)) {
                         source.value(savedAnswer.value);
                     }
-                    
+
                     return source;
                 });
 
                 that.targets = _.map(values, function (value) {
-                    var target = new Target(value);
-                    target.value.subscribe(function() {
+                    return new Target(value);
+                });
+
+                _.each(question.selectedAnswers, function (savedAnswer) {
+                    var targetToReject = _.find(that.targets, function (target) {
+                        return target.value() == savedAnswer.value;
+                    });
+                    targetToReject.rejectValue();
+                });
+
+                _.each(that.targets, function (target) {
+                    target.value.subscribe(function () {
                         that.saveSelectedAnswers();
                     });
-
-                    var savedAnswer = _.find(question.selectedAnswers, function (selectedAnswer) {
-                        return selectedAnswer.value == value;
-                    });
-                    if (!_.isNullOrUndefined(savedAnswer)) {
-                        target.rejectValue();
-                    }
-
-                    return target;
                 });
-                
+
             }).then(loadContent);
         };
 
@@ -64,19 +65,23 @@
         };
 
         that.isReady = ko.observable(false);
-        that.compositionComplete = function(view) {
+        that.compositionComplete = function (view) {
             viewHelper(view);
             that.isReady(true);
         };
 
-        that.saveSelectedAnswers = function() {
-            var answers = _.map(that.sources, function (source) {
-                return {
-                    id: source.id,
-                    value: ko.utils.unwrapObservable(source.value)
-                };
-            });
-
+        that.saveSelectedAnswers = function () {
+            var answers = _.chain(that.sources)
+                .map(function (source) {
+                    return {
+                        id: source.id,
+                        value: ko.utils.unwrapObservable(source.value)
+                    };
+                })
+                .filter(function (answer) {
+                    return !_.isNullOrUndefined(answer.value);
+                })
+                .value();
             question.saveSelectedAnswers(answers);
         };
 

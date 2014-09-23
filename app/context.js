@@ -35,6 +35,9 @@
                 title: course.title,
                 hasIntroductionContent: course.hasIntroductionContent,
                 objectives: mapObjectives(course.objectives)
+                            .filter(function (item) {
+                                return !_.isNullOrUndefined(item.questions) && item.questions.length > 0;
+                            })
             });
         }
 

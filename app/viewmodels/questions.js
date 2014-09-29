@@ -30,7 +30,7 @@
 
         function canActivate() {
             var course = courseRepository.get();
-            return !course.isAnswered();
+            return course.isAnswered() ? { redirect: 'summary' } : true;
         }
 
         function activate() {

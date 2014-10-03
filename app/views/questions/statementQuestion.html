@@ -19,10 +19,10 @@
         <li class="question-answer-item">
             <div class="question-answer-text selectable" data-bind="text: text">statement</div>
             <div class="question-answer-wrapper">
-                <a class="question-answer-radiobutton" data-bind="click: setTrue, css: { checked: isTrueChecked() }">&nbsp;</a>
+                <a class="question-answer-radiobutton" data-bind="click: $parent.setTrue, css: { checked: isTrueChecked() }">&nbsp;</a>
             </div>
             <div class="question-answer-wrapper">
-                <a class="question-answer-radiobutton" data-bind="click: setFalse, css: { checked: isFalseChecked() }">&nbsp;</a>
+                <a class="question-answer-radiobutton" data-bind="click: $parent.setFalse, css: { checked: isFalseChecked() }">&nbsp;</a>
             </div>
         </li>
     </ul>

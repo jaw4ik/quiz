@@ -17,26 +17,25 @@
             that.activate = function () {
                 return Q.fcall(function () {
                     that.statements = _.map(question.statements, function (statement) {
-                        var selectedStatement = _.find(question.selectedStatements, function(item) {
+                        var answeredStatement = _.find(question.answeredStatements, function (item) {
                              return item.id == statement.id;
                         });
 
-                        return {
+                        var statementViewModel = {
                             id: statement.id,
                             text: statement.text,
-                            isTrueChecked: ko.observable(_.isNullOrUndefined(selectedStatement) ? false : selectedStatement.state == true),
-                            isFalseChecked: ko.observable(_.isNullOrUndefined(selectedStatement) ? false : selectedStatement.state == false),
-                            setTrue: function () {
-                                this.isTrueChecked(true);
-                                this.isFalseChecked(false);
-                                that.saveSelectedStatements();
-                            },
-                            setFalse: function () {
-                                this.isTrueChecked(false);
-                                this.isFalseChecked(true);
-                                that.saveSelectedStatements();
-                            }
+                            selectedState: ko.observable(_.isNullOrUndefined(answeredStatement) ? null : answeredStatement.state)
                         };
+
+                        statementViewModel.isTrueChecked = ko.computed(function() {
+                            return statementViewModel.selectedState() == true;
+                        });
+
+                        statementViewModel.isFalseChecked = ko.computed(function () {
+                            return statementViewModel.selectedState() == false;
+                        });
+
+                        return statementViewModel;
                     });
 
                     if (that.hasContent) {
@@ -44,6 +43,16 @@
                     }
                 });
             };
+
+            that.setTrue = function(statement) {
+                statement.selectedState(true);
+                that.saveAnsweredStatements();
+            }
+
+            that.setFalse = function (statement) {
+                statement.selectedState(false);
+                that.saveAnsweredStatements();
+            }
 
             that.loadQuestionContent = function () {
                 var contentUrl = 'content/' + that.objectiveId + '/' + that.id + '/content.html';
@@ -60,25 +69,21 @@
             };
 
             that.submit = function () {
-                var selectedStatements = getSelectedStatements();
+                var answeredStatements = getAnsweredStatements();
                 var question = questionRepository.get(that.objectiveId, that.id);
-                question.answer(selectedStatements);
+                question.answer(answeredStatements);
             };
 
-            that.saveSelectedStatements = function () {
-                var selectedStatements = getSelectedStatements();
+            that.saveAnsweredStatements = function () {
+                var answeredStatements = getAnsweredStatements();
                 var question = questionRepository.get(that.objectiveId, that.id);
 
-                question.saveSelectedStatements(selectedStatements);
+                question.saveAnsweredStatements(answeredStatements);
             };
 
-            function getSelectedStatements() {
+            function getAnsweredStatements() {
                 return _.chain(that.statements).map(function (statement) {
-                    if (statement.isTrueChecked()) {
-                        return { id: statement.id, state: true };
-                    } else if (statement.isFalseChecked()) {
-                        return { id: statement.id, state: false };
-                    }
+                    return { id: statement.id, state: statement.selectedState() };
                 }).filter(function (statement) {
                     return !_.isNullOrUndefined(statement);
                 }).value();

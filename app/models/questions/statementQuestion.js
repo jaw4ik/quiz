@@ -9,26 +9,22 @@
         that.title = spec.title;
         that.hasContent = spec.hasContent;
         that.statements = _.shuffle(spec.statements);
-        that.selectedStatements = [];
+        that.answeredStatements = [];
         that.learningContents = spec.learningContents;
 
         that.isAnswered = false;
         that.isCorrectAnswered = false;
         that.score = 0;
 
-        that.answer = function (selectedStatements) {
-            that.isCorrectAnswered = true;
-            for (var i = 0; i < that.statements.length; i++) {
-                var statement = that.statements[i];
-                var selected = _.find(selectedStatements, function (item) {
-                    return item.id == statement.id;
+        that.answer = function (answeredStatements) {
+
+            that.isCorrectAnswered = _.every(answeredStatements, function (answered) {
+                var statement = _.find(that.statements, function (item) {
+                    return item.id == answered.id;
                 });
 
-                if (_.isNullOrUndefined(selected) || selected.state != statement.isCorrect) {
-                    that.isCorrectAnswered = false;
-                    break;
-                }
-            }
+                return !_.isNullOrUndefined(answered.state) && answered.state == statement.isCorrect;
+            });
 
             that.score = that.isCorrectAnswered ? 100 : 0;
             that.isAnswered = true;
@@ -46,7 +42,7 @@
                         };
                     }),
                     score: that.score,
-                    selectedStatements: selectedStatements,
+                    answeredStatements: answeredStatements,
                     correctStatements: that.statements
                 },
                 objective: {
@@ -57,8 +53,8 @@
             eventManager.answersSubmitted(eventData);
         };
 
-        that.saveSelectedStatements = function (selectedStatements) {
-            that.selectedStatements = selectedStatements;
+        that.saveAnsweredStatements = function (answeredStatements) {
+            that.answeredStatements = answeredStatements;
         };
 
         that.resetProgress = function () {

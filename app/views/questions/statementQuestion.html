@@ -15,15 +15,25 @@
     <div class="question-content-wrapper" data-bind="visible: hasContent">
         <div class="question-content" data-bind="html: content, imageWrap: content"></div>
     </div>
-    <ul class="question-answers-list" data-bind="foreach: statements">
-        <li class="question-answer-item">
-            <div class="question-answer-text selectable" data-bind="text: text">statement</div>
-            <div class="question-answer-wrapper">
+    <div class="statement">
+        <div class="statement-headers-group">
+            <div class="statement-header"></div>
+            <div class="statement-header statement-option">True</div>
+            <div class="statement-header statement-option">False</div>
+        </div>
+
+        <!-- ko foreach: statements -->
+        <div class="statement-item">
+            <div class="statement-label">
+                <span data-bind="text: text"></span>
+            </div>
+            <div class="statement-option question-answer-wrapper">
                 <a class="question-answer-radiobutton" data-bind="click: $parent.setTrue, css: { checked: isTrueChecked() }">&nbsp;</a>
             </div>
-            <div class="question-answer-wrapper">
+            <div class="statement-option question-answer-wrapper">
                 <a class="question-answer-radiobutton" data-bind="click: $parent.setFalse, css: { checked: isFalseChecked() }">&nbsp;</a>
             </div>
-        </li>
-    </ul>
+        </div>
+        <!-- /ko -->
+    </div>
 </section>

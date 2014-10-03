@@ -28,7 +28,7 @@
 
             that.score = that.isCorrectAnswered ? 100 : 0;
             that.isAnswered = true;
-
+            
             var objective = objectiveRepository.get(that.objectiveId);
             var eventData = {
                 type: "choice",
@@ -42,14 +42,21 @@
                         };
                     }),
                     score: that.score,
-                    answeredStatements: answeredStatements,
-                    correctStatements: that.statements
+                    selectedAnswersIds: _.chain(answeredStatements).filter(function (statement) {
+                        return !_.isNullOrUndefined(statement.state);
+                    }).map(function (statement) {
+                        return statement.id + '[.]' + statement.state;
+                    }).value(),
+                    correctAnswersIds: _.map(that.statements, function (item) {
+                        return item.id + '[.]' + item.isCorrect;
+                    })
                 },
                 objective: {
                     id: objective.id,
                     title: objective.title
                 }
             };
+
             eventManager.answersSubmitted(eventData);
         };
 

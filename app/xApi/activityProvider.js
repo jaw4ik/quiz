@@ -108,7 +108,7 @@
         function enqueueAnsweredQuestionsStatements(eventData) {
             switch (eventData.type) {
                 case constants.interactionTypes.choice:
-                    enqueueSingleSelectTextQuestionAnsweredStatement(eventData);
+                    enqueueSelectTextQuestionAnsweredStatement(eventData);
                     break;
                 case constants.interactionTypes.fillIn:
                     enqueueFillInQuestionAnsweredStatement(eventData);
@@ -122,7 +122,7 @@
             }
         }
 
-        function enqueueSingleSelectTextQuestionAnsweredStatement(eventData) {
+        function enqueueSelectTextQuestionAnsweredStatement(eventData) {
             var question = eventData.question,
                 objective = eventData.objective;
 
@@ -267,7 +267,7 @@
 
             pushStatementIfSupported(createStatement(constants.verbs.answered, result, object, context));
         }
-
+        
         function createActor(name, email) {
             var actor = {};
 

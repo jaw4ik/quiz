@@ -68,7 +68,7 @@
             that.isAnswered = false;
             that.isCorrectAnswered = false;
             that.score = 0;
-            that.selectedAnswers = [];
+            that.answeredStatements = [];
         };
     };
 

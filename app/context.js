@@ -1,8 +1,8 @@
 ﻿define(['models/course', 'models/objective', 'models/answer', 'models/learningContent', 'models/questions/multipleSelectQuestion', 'models/questions/singleSelectTextQuestion',
     'models/questions/fillInTheBlanksQuestion', 'models/questions/dragAndDropTextQuestion', 'models/questions/singleSelectImageQuestion', 'models/singleSelectImageAnswer',
-    'models/answerGroup', 'constants', 'models/questions/textMatchingQuestion'],
+    'models/answerGroup', 'constants', 'models/questions/textMatchingQuestion', 'models/questions/statementQuestion'],
     function (Course, Objective, Answer, LearningContent, MultipleSelectQuestion, SingleSelectTextQuestion, FillInTheBlanksQuestion, DragAndDropTextQuestion,
-        SingleSelectImageQuestion, SingleSelectImageAnswer, AnswerGroup, constants, TextMatchingQuestion) {
+        SingleSelectImageQuestion, SingleSelectImageAnswer, AnswerGroup, constants, TextMatchingQuestion, StatementQuestion) {
         "use strict";
 
         var context = {
@@ -66,6 +66,8 @@
                     return mapSingleSelectImageQuestion(question, objective.id);
                 } else if (question.type == constants.question.types.textMatching) {
                     return mapTextMatchingQuestion(question, objective.id);
+                } else if (question.type == constants.question.types.statement) {
+                    return mapStatementQuestion(question, objective.id);
                 }
             }).filter(function (question) {
                 return !_.isNullOrUndefined(question);
@@ -144,6 +146,18 @@
                 score: 0,
                 hasContent: question.hasContent,
                 correctAnswerId: question.correctAnswerId
+            });
+        }
+
+        function mapStatementQuestion(question, objectiveId) {
+            return new StatementQuestion({
+                id: question.id,
+                objectiveId: objectiveId,
+                title: question.title,
+                statements: question.answers,
+                learningContents: mapLearningContents(question.learningContents),
+                score: 0,
+                hasContent: question.hasContent
             });
         }
 

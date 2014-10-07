@@ -1,4 +1,4 @@
-﻿define(['eventManager', 'repositories/objectiveRepository'], function (eventManager, objectiveRepository) {
+﻿define(['guard', 'eventManager', 'repositories/objectiveRepository'], function (guard, eventManager, objectiveRepository) {
     "use strict";
 
     var ctor = function (spec) {
@@ -32,8 +32,8 @@
             that.score = correct === that.dropspots.length ? 100 : 0;
 
             var objective = objectiveRepository.get(that.objectiveId);
-            var eventData =  {
-                type: "other",
+            var eventData = {
+                type: "dragAndDrop",
                 question: {
                     id: that.id,
                     title: that.title,

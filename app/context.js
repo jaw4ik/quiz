@@ -1,8 +1,8 @@
 ﻿define(['models/course', 'models/objective', 'models/answer', 'models/learningContent', 'models/questions/multipleSelectQuestion', 'models/questions/singleSelectTextQuestion',
     'models/questions/fillInTheBlanksQuestion', 'models/questions/dragAndDropTextQuestion', 'models/questions/singleSelectImageQuestion', 'models/singleSelectImageAnswer',
-    'models/answerGroup', 'constants', 'models/questions/textMatchingQuestion'],
-    function (Course, Objective, Answer, LearningContent, MultipleSelectQuestion, SingleSelectTextQuestion, FillInTheBlanksQuestion, DragAndDropTextQuestion,
-        SingleSelectImageQuestion, SingleSelectImageAnswer, AnswerGroup, constants, TextMatchingQuestion) {
+    'models/answerGroup', 'constants', 'models/questions/textMatchingQuestion', 'models/questions/hotspot'],
+    function(Course, Objective, Answer, LearningContent, MultipleSelectQuestion, SingleSelectTextQuestion, FillInTheBlanksQuestion, DragAndDropTextQuestion,
+        SingleSelectImageQuestion, SingleSelectImageAnswer, AnswerGroup, constants, TextMatchingQuestion, Hotspot) {
         "use strict";
 
         var context = {
@@ -21,7 +21,7 @@
                 url: 'content/data.js?v=' + Math.random(),
                 contentType: 'application/json',
                 dataType: 'json'
-            }).then(function (response) {
+            }).then(function(response) {
                 context.course = mapCourse(response);
             });
         };
@@ -35,14 +35,14 @@
                 title: course.title,
                 hasIntroductionContent: course.hasIntroductionContent,
                 objectives: mapObjectives(course.objectives)
-                            .filter(function (item) {
-                                return !_.isNullOrUndefined(item.questions) && item.questions.length > 0;
-                            })
+                    .filter(function(item) {
+                        return !_.isNullOrUndefined(item.questions) && item.questions.length > 0;
+                    })
             });
         }
 
         function mapObjectives(objectives) {
-            return _.map(objectives, function (objective) {
+            return _.map(objectives, function(objective) {
                 return new Objective({
                     id: objective.id,
                     title: objective.title,
@@ -53,7 +53,7 @@
         }
 
         function mapQuestions(objective) {
-            return _.chain(objective.questions).map(function (question) {
+            return _.chain(objective.questions).map(function(question) {
                 if (question.type == constants.question.types.multipleSelect) {
                     return mapMultipleSelectQuestion(question, objective.id);
                 } else if (question.type == constants.question.types.singleSelectText) {
@@ -66,8 +66,10 @@
                     return mapSingleSelectImageQuestion(question, objective.id);
                 } else if (question.type == constants.question.types.textMatching) {
                     return mapTextMatchingQuestion(question, objective.id);
+                } else if (question.type == constants.question.types.hotspot) {
+                    return mapHotspotQuestion(question, objective.id);
                 }
-            }).filter(function (question) {
+            }).filter(function(question) {
                 return !_.isNullOrUndefined(question);
             }).value();
 
@@ -144,6 +146,20 @@
                 score: 0,
                 hasContent: question.hasContent,
                 correctAnswerId: question.correctAnswerId
+            });
+        }
+
+        function mapHotspotQuestion(question, objectiveId) {
+            return new Hotspot({
+                id: question.id,
+                objectiveId: objectiveId,
+                title: question.title,
+                spots: question.spots,
+                isMultiple: question.isMultiple,
+                background: question.background,
+                learningContents: mapLearningContents(question.learningContents),
+                score: 0,
+                hasContent: question.hasContent
             });
         }
 

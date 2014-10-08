@@ -1,4 +1,4 @@
-﻿define(['guard', 'eventManager', 'repositories/objectiveRepository'], function (guard, eventManager, objectiveRepository) {
+﻿define(['eventManager', 'repositories/objectiveRepository'], function (eventManager, objectiveRepository) {
     "use strict";
 
     var ctor = function (spec) {

@@ -62,6 +62,7 @@
             that.resetProgress = function () {
                 that.score = 0;
                 that.placedMarks = [];
+                that.isAnswered = false;
             };
         };
 

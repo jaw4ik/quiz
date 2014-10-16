@@ -55,7 +55,7 @@
                 eventManager.answersSubmitted(eventData);
             };
 
-            that.savePlacedMarks = function(marks) {
+            that.savePlacedMarks = function (marks) {
                 that.placedMarks = marks;
             };
 
@@ -69,6 +69,10 @@
         return Hotspot;
 
         function calculateScore(isMultiple, spots, placedMarks) {
+            if (!_.isArray(spots) || spots.length == 0) {
+                return 100;
+            }
+
             var answerCorrect;
             if (!isMultiple) {
                 answerCorrect = _.some(spots, function (spot) {
@@ -77,25 +81,19 @@
                     });
                 });
             } else {
-                var markedSpotsCount = 0;
-                var markersInSpotsCount = 0;
+                var spotsWithMarks = [];
+                var marksOnSpots = [];
 
-                _.each(spots, function (spot) {
-                    var counter = 0;
-
-                    _.each(placedMarks, function (mark) {
+                _.each(placedMarks, function (mark) {
+                    _.each(spots, function (spot) {
                         if (markIsInSpot(mark, spot)) {
-                            counter++;
+                            spotsWithMarks.push(spot);
+                            marksOnSpots.push(mark);
                         }
                     });
-
-                    if (counter > 0) {
-                        markedSpotsCount++;
-                        markersInSpotsCount += counter;
-                    }
-
                 });
-                answerCorrect = markedSpotsCount === spots.length && markersInSpotsCount === placedMarks.length;
+
+                answerCorrect = _.uniq(spotsWithMarks).length === spots.length && _.uniq(marksOnSpots).length === placedMarks.length;
             }
 
             return answerCorrect ? 100 : 0;

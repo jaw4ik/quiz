@@ -50,12 +50,10 @@
 
         that.removeMark = function (mark) {
             that.marks.remove(mark);
-            var question = questionRepository.get(that.objectiveId, that.id);
             question.savePlacedMarks(that.marks());
         };
 
         that.submit = function () {
-            var question = questionRepository.get(that.objectiveId, that.id);
             question.answer(that.marks());
         };
     };

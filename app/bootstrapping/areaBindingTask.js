@@ -18,8 +18,8 @@
                     function handler(e) {
                         var
                             offset = $(element).offset(),
-                            x = e.clientX - offset.left,
-                            y = e.clientY - offset.top,
+                            x = e.pageX - offset.left,
+                            y = e.pageY - offset.top,
                             targetWidth = $(element).width(),
                             targetHeight = $(element).height()
                         ;

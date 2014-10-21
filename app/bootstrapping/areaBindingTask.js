@@ -1,4 +1,4 @@
-﻿define([], function () {
+﻿define(['browserSupport'], function (browserSupport) {
     "use strict";
 
     return {
@@ -23,6 +23,13 @@
                             targetWidth = $(element).width(),
                             targetHeight = $(element).height()
                         ;
+
+                        // workaround for specific version of Chrome with next bug:
+                        // https://code.google.com/p/chromium/issues/detail?id=423802
+                        if (browserSupport.isChromeWithPageCoordsBug) {
+                            x -= window.scrollX;
+                            y -= window.scrollY;
+                        }
 
                         if (typeof (click) == "function") {
                             var point = {

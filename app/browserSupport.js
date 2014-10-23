@@ -6,17 +6,26 @@
         isSupportedBrowser: null,
         isMobileDevice: null,
         isIE9: null,
+        isChromeWithPageCoordsBug: null,
 
         initialize: initialize
     };
-    
+
     return browserSupport;
 
     function initialize() {
         browserSupport.isIE9 = isIE9();
         browserSupport.isMobileDevice = isMobileDevice();
-        browserSupport.isSupportedMobile= isSupportedMobile();
+        browserSupport.isSupportedMobile = isSupportedMobile();
         browserSupport.isSupportedBrowser = isSupportedBrowser();
+        browserSupport.isChromeWithPageCoordsBug = isChromeWithPageCoordsBug();
+    }
+
+    function isChromeWithPageCoordsBug() {
+        if (ua.match(/(chrome)\/?\s*([\d\.]+)/i)) {
+            return window.navigator.appVersion.match(/Chrome\/(.*?) /)[1] == "38.0.2125.102";
+        }
+        return false;
     }
 
     function isIE9() {
@@ -55,11 +64,11 @@
             ua.indexOf("firefox") == -1) {
             return true;
         }
-            
+
         return false;
     };
 
-    function  isSupportedBrowser() {
+    function isSupportedBrowser() {
         // Opera is not supported
         if (navigator.appName.toLowerCase() == "opera" || navigator.userAgent.indexOf("OPR") != -1)
             return false;

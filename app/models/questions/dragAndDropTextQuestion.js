@@ -32,8 +32,8 @@
             that.score = correct === that.dropspots.length ? 100 : 0;
 
             var objective = objectiveRepository.get(that.objectiveId);
-            var eventData =  {
-                type: "other",
+            var eventData = {
+                type: "dragAndDrop",
                 question: {
                     id: that.id,
                     title: that.title,

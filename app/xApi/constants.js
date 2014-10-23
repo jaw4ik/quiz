@@ -51,7 +51,9 @@
             choice: "choice",
             fillIn: "fill-in",
             other: "other",
-            matching: "matching"
+            matching: "matching",
+            dragAndDrop: "dragAndDrop",
+            hotspot: "hotspot"
         };
 
     return {

@@ -2,11 +2,11 @@
     './questions/multipleSelectQuestion', './questions/singleSelectTextQuestion', './questions/fillInTheBlanksQuestion', './questions/dragAndDropTextQuestion',
     'models/questions/multipleSelectQuestion', 'models/questions/singleSelectTextQuestion', 'models/questions/fillInTheBlanksQuestion', 'models/questions/dragAndDropTextQuestion',
     'models/questions/singleSelectImageQuestion', 'viewmodels/questions/singleSelectImageQuestion', 'models/questions/textMatchingQuestion', 'viewmodels/questions/textMatchingQuestion',
-    'models/questions/hotspot', 'viewmodels/questions/hotspot'],
-    function (app, router, eventManager, settings, questionRepository, courseRepository, constants,
+    'models/questions/statementQuestion', 'viewmodels/questions/statementQuestion', 'models/questions/hotspot', 'viewmodels/questions/hotspot'],
+function (app, router, eventManager, settings, questionRepository, courseRepository, constants,
         MultipleSelectQuestionViewModel, SingleSelectTextQuestionViewModel, FillInTheBlanksViewModel, DragAndDropTextQuestionViewModel,
         MultipleSelectQuestionModel, SingleSelectTextQuestionModel, FillInTheBlanksQuestionModel, DragAndDropTextQuestionModel, SingleSelectImageQuestionModel, SingleSelectImageQuestionViewModel,
-        TextMatchingQuestionModel, TextMatchingQuestionViewModel, HotspotModel, HotSpotViewModel) {
+        TextMatchingQuestionModel, TextMatchingQuestionViewModel, StatementQuestionModel, StatementQuestionViewModel, HotspotModel, HotSpotViewModel) {
         "use strict";
 
         var viewModel = {
@@ -58,6 +58,8 @@
                         return new SingleSelectImageQuestionViewModel(question, key, course.allQuestions.length);
                     } else if (question instanceof TextMatchingQuestionModel) {
                         return new TextMatchingQuestionViewModel(question, key, course.allQuestions.length);
+                    } else if (question instanceof StatementQuestionModel) {
+                        return new StatementQuestionViewModel(question, key, course.allQuestions.length);
                     } else if (question instanceof HotspotModel) {
                         return new HotSpotViewModel(question, key, course.allQuestions.length);
                     }
@@ -127,6 +129,9 @@
                         return new SingleSelectImageQuestionViewModel(question, key, course.allQuestions.length);
                     } else if (question instanceof TextMatchingQuestionModel) {
                         return new TextMatchingQuestionViewModel(question, key, course.allQuestions.length);
+                    } else if (question instanceof StatementQuestionModel) {
+                        return new StatementQuestionViewModel(question, key, course.allQuestions.length);
+                    }
                     } else if (question instanceof HotspotModel) {
                         return new HotSpotViewModel(question, key, course.allQuestions.length);
                     }

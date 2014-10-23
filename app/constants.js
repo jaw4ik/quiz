@@ -11,6 +11,7 @@
             singleSelectText: 'singleSelectText',
             singleSelectImage: 'singleSelectImage',
             textMatching: 'textMatching',
+            statement: 'statement',
             hotspot: "hotspot"
         }
     }

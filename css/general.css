@@ -405,17 +405,6 @@
         background: transparent;
     }
 
-    .radio.image .radio-icon-wrapper {
-        display: block;
-        text-align: center;
-        width: 100%;
-        margin-top: 2px;
-    }
-
-    .radio.image .radio-icon {
-        margin: auto;
-    }
-
 .radio-image {
     display: block;
 }
@@ -664,6 +653,70 @@
     color: #B3E2EF;
 }
 
+/* #endregion*/
+
+/* #region Statements question */
+
+.statement {
+    display: table;
+    padding: 10px 65px 15px;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.statement-headers-group {
+    display: table-header-group;
+}
+
+.statement-header {
+    display: table-cell;
+    font-size: 18px;
+    font-family: 'Arial';
+    font-weight: bold;
+    color: #777777;
+    height: 50px;
+    vertical-align: middle;
+}
+
+.statement-item {
+    display: table-row;
+    height: 60px;
+}
+
+.statement-item:hover {
+    background-color: #f9f9f9;
+}
+
+.statement-label,
+.statement-option {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.statement-header,
+.statement-option {
+    text-align: center;
+}
+
+.statement-option {
+    width: 100px;
+}
+
+.statement-label {
+    padding: 10px 65px 10px 30px;
+    word-wrap: break-word;
+}
+
+.statement-label-text {
+    white-space: pre-wrap;
+}
+
+.statement-option .question-answer-radiobutton {
+    cursor: pointer;
+    margin-right: 0;
+    vertical-align: middle;
+    display: inline-block;
+}
 /* #endregion*/
 /*
  * easygenerator | Copyright 2013
@@ -1183,10 +1236,16 @@ body {
     vertical-align: middle;
 }
 
+.question-answer-radiobutton-wrapper {
+    width: 100%;
+    margin-top: 8px;
+}
+
 .question-answer-radiobutton {
     display: block;
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
+    position: relative;
     border-radius: 50%;
     border: 1px solid #aaaaaa;
     background-color: white;
@@ -1196,12 +1255,21 @@ body {
     .question-answer-radiobutton.checked:before {
         content: '';
         display: block;
-        width: 15px;
-        height: 15px;
-        margin: 10px auto;
+        width: 18px;
+        height: 18px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
         background-color: #41b7d8;
         border-radius: 50%;
     }
+
+.question-answer-radiobutton-wrapper .question-answer-radiobutton {
+    margin: 0 auto;
+}
 
 .question-answer-text {
     display: table-cell;

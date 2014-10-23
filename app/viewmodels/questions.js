@@ -131,7 +131,6 @@ function (app, router, eventManager, settings, questionRepository, courseReposit
                         return new TextMatchingQuestionViewModel(question, key, course.allQuestions.length);
                     } else if (question instanceof StatementQuestionModel) {
                         return new StatementQuestionViewModel(question, key, course.allQuestions.length);
-                    }
                     } else if (question instanceof HotspotModel) {
                         return new HotSpotViewModel(question, key, course.allQuestions.length);
                     }

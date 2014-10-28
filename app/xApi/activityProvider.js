@@ -247,7 +247,7 @@
                         "en-US": question.title
                     },
                     interactionType: constants.interactionTypes.other,
-                    correctResponsesPattern: question.spots
+                    correctResponsesPattern: [question.spots.join("[,]")]
                 }
             };
 
